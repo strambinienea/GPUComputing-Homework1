@@ -21,7 +21,7 @@ MATRIX_TYPE* initMatrix(int matrixSize, bool generateValue) {
         cout << "Matrix wil be left empty" << endl;
     } else {
         for (int i = 0; i < matrixSize * matrixSize; i++) {
-            matrix[i] = (MATRIX_TYPE) (rand() % MAX_RANDOM_NUMBER);
+            matrix[i] = (MATRIX_TYPE) rand();
         }
     }
     return matrix;

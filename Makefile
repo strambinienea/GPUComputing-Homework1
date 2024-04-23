@@ -1,7 +1,7 @@
 # Compiler to use
 CC = g++
 # Compiler flags
-CFLAGS = -std=c++14
+CFLAGS = -std=c++14 -g
 INCLUDE = -Iinclude
 
 BUILD_DIR := build
@@ -29,5 +29,5 @@ $(OBJECTS): $(LIB_DIR)/MatrixLib.cpp
 $(LIB_DIR)/MatrixLib.cpp: include/MatrixLib.h
 
 clean:
-	rm -f $(TARGET_DIR)/*
-	rm -f $(BUILD_DIR)/*
+	rm -rf $(TARGET_DIR)/*
+	rm -rf $(BUILD_DIR)/*

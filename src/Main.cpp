@@ -1,7 +1,77 @@
 #include <cstdlib>
 #include <iostream>
+#include <chrono>
 #include <MatrixLib.h>
 using namespace std;
+using namespace std::chrono;
+
+void calculateEffectiveBandwidth(
+        const int iterations,
+        const int matrixSize,
+        const bool tiledApproach = false,
+        const int tileGridSize = 2
+) {
+
+    MATRIX_TYPE* matrix = nullptr;
+    MATRIX_TYPE* transposedMatrix = nullptr;
+
+    // Initialize both matrices
+    matrix = initMatrix(matrixSize);
+    transposedMatrix = initMatrix(matrixSize, false);
+
+    // Array that contains all the execution times, will be used to calculate the mean value and exclude the outliers
+    //
+    auto execTimes = (double*) malloc(iterations * sizeof(clock_t));
+
+    if (tiledApproach) {
+
+        cout << "Calculating the effective bandwidth using the tiled approach" << endl;
+        for (int i = 0; i < iterations; i++) {
+
+            // Save the start time to calculate the execution time
+            steady_clock::time_point start = high_resolution_clock::now();
+            transposeMatrixTiled(matrix, transposedMatrix, matrixSize, tileGridSize, false);
+            steady_clock::time_point end = high_resolution_clock::now();
+
+            // calculate the execution time and save it in an array to be processed later
+            execTimes[i] = std::chrono::duration<double, std::milli>(end - start).count();
+        }
+    } else {
+
+        cout << "Calculating the effective bandwidth using the naive approach" << endl;
+        for (int i = 0; i < iterations; i++) {
+
+            // Save the start time to calculate the execution time
+            steady_clock::time_point start = high_resolution_clock::now();
+            transposeMatrix(matrix, transposedMatrix, matrixSize, false);
+            steady_clock::time_point end = high_resolution_clock::now();
+
+            // calculate the execution time and save it in an array to be processed later
+            double executionTime = std::chrono::duration<double, std::milli>(end - start).count();
+            execTimes[i] = executionTime;
+        }
+    }
+
+    // Sort the array of execution times, only consider the first 90% of the values
+    // This is done to exclude the outliers, only keep values in the 90th percentile
+    sort(execTimes, execTimes + iterations);
+    int percentile = (int) (iterations * 0.9);
+    double average = 0;
+    for (int i = 0; i < percentile; i++) { average += execTimes[i]; }
+    average = average / percentile;
+
+    cout << "Average execution time: " << average << " ms" << endl;
+    cout << "Minimum execution time: " << execTimes[0] << " ms" << endl;
+    cout << "Maximum execution time: " << execTimes[percentile - 1] << " ms" << endl;
+
+    // Calculate the effective bandwidth
+    double effectiveBandwidth = (2 * matrixSize * matrixSize * sizeof(MATRIX_TYPE)) / (average * 1000);
+    cout << "Effective bandwidth: " << effectiveBandwidth << " MB/s" << endl;
+
+    free(matrix);
+    free(transposedMatrix);
+    free(execTimes);
+};
 
 int main(int argc, char** argv) {
 
@@ -22,23 +92,12 @@ int main(int argc, char** argv) {
 
     // Calculate the size of the matrix and initialize it
     int matrixSize = 1 << atoi(argv[1]);
-
-    MATRIX_TYPE* matrix = nullptr;
-    MATRIX_TYPE *transposedMatrix, *tiledTransposedMatrix = nullptr;
-
-    matrix = initMatrix(matrixSize);
-    transposedMatrix = initMatrix(matrixSize, false);
-    tiledTransposedMatrix = initMatrix(matrixSize, false);
-
-    // Compute the transpose of the matrix
-    transposeMatrix(matrix, transposedMatrix, matrixSize);
-
-    // Compute the transpose of the matrix using a tiled approach
-    transposeMatrixTiled(matrix, tiledTransposedMatrix, matrixSize, 2, debug);
-
-    free(matrix);
-    free(transposedMatrix);
-    free(tiledTransposedMatrix);
+    // TILED APPROACH
+//    calculateEffectiveBandwidth(1000, matrixSize, true, 8);
+    // NAIVE APPROACH
+    calculateEffectiveBandwidth(1000, matrixSize);
 
     return 0;
 }
+
+
