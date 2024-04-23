@@ -9,7 +9,7 @@ LIB_DIR := lib
 TARGET_DIR := bin
 
 # Name of your main cpp file
-MAIN = main.cpp
+MAIN = Main.cpp
 # Name of the executable
 EXECUTABLE = $(TARGET_DIR)/GPUComp_H1
 # Name of the library
