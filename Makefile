@@ -21,9 +21,11 @@ debug: CFLAGS += -DDEBUG
 debug: all
 
 $(EXECUTABLE): src/${MAIN} $(OBJECTS)
+	@mkdir -p $(@D)
 	$(CC) $^ -o $@ $(INCLUDE) $(CFLAGS)
 
 $(OBJECTS): $(LIB_DIR)/MatrixLib.cpp
+	@mkdir -p $(@D)
 	$(CC) -c -o $@ $(INCLUDE) $^ $(CFLAGS)
 
 $(LIB_DIR)/MatrixLib.cpp: include/MatrixLib.h

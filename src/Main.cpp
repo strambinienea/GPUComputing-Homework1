@@ -1,6 +1,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <chrono>
+#include <algorithm>
 #include <MatrixLib.h>
 using namespace std;
 using namespace std::chrono;
@@ -29,9 +30,9 @@ void calculateEffectiveBandwidth(
         for (int i = 0; i < iterations; i++) {
 
             // Save the start time to calculate the execution time
-            steady_clock::time_point start = high_resolution_clock::now();
+            auto start = high_resolution_clock::now();
             transposeMatrixTiled(matrix, transposedMatrix, matrixSize, tileGridSize, false);
-            steady_clock::time_point end = high_resolution_clock::now();
+            auto end = high_resolution_clock::now();
 
             // calculate the execution time and save it in an array to be processed later
             execTimes[i] = std::chrono::duration<double, std::milli>(end - start).count();
@@ -42,9 +43,9 @@ void calculateEffectiveBandwidth(
         for (int i = 0; i < iterations; i++) {
 
             // Save the start time to calculate the execution time
-            steady_clock::time_point start = high_resolution_clock::now();
+            auto start = high_resolution_clock::now();
             transposeMatrix(matrix, transposedMatrix, matrixSize, false);
-            steady_clock::time_point end = high_resolution_clock::now();
+            auto end = high_resolution_clock::now();
 
             // calculate the execution time and save it in an array to be processed later
             double executionTime = std::chrono::duration<double, std::milli>(end - start).count();
