@@ -93,8 +93,15 @@ int main(int argc, char** argv) {
 
     // Calculate the size of the matrix and initialize it
     int matrixSize = 1 << atoi(argv[1]);
+
+    // Default grid size for the tiled approach
+    int gridSize = 8;
+    if (argc > 2) {
+        gridSize = atoi(argv[2]);
+    }
+
     // TILED APPROACH
-//    calculateEffectiveBandwidth(1000, matrixSize, true, 8);
+    calculateEffectiveBandwidth(1000, matrixSize, true, gridSize);
     // NAIVE APPROACH
     calculateEffectiveBandwidth(1000, matrixSize);
 

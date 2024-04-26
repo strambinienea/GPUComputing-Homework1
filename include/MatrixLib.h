@@ -38,7 +38,7 @@ void transposeMatrix(const MATRIX_TYPE* matrix, MATRIX_TYPE* transposedMatrix, i
  * @param matrix - Pointer to the matrix
  * @param transposedMatrix - Pointer to the transposed matrix where the result will be stored
  * @param matrixSize - Size of the matrix, the matrix has the same number of rows and columns
- * @param tileGridSize - Size of the block grid, the number is an exponent for a power of 2
+ * @param tileGridSize - Size of the block grid
  * @param debug - If true, the matrix will be printed
  */
 void transposeMatrixTiled(
