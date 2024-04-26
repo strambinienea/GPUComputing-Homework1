@@ -1,11 +1,17 @@
 #include <cstdlib>
 #include <iostream>
-#include <chrono>
 #include <algorithm>
 #include <MatrixLib.h>
 using namespace std;
 using namespace std::chrono;
 
+/**
+ * Method used to calculate the effective bandwidth of the transpose operation
+ * @param iterations - Number of iterations to calculate the average execution time
+ * @param matrixSize - Size of the matrix
+ * @param tiledApproach - Flag to use the tiled approach
+ * @param tileGridSize - Size of the grid for the tiled approach
+ */
 void calculateEffectiveBandwidth(
         const int iterations,
         const int matrixSize,
